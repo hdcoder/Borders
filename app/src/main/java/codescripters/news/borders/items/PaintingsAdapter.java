@@ -12,13 +12,24 @@ import com.alexvasilkov.android.commons.adapters.ItemsAdapter;
 import com.alexvasilkov.android.commons.utils.Views;
 
 import java.util.Arrays;
+import java.util.List;
 
 import codescripters.news.borders.MainActivity;
+import codescripters.news.borders.Objects.NewsObject;
 import codescripters.news.borders.R;
 import codescripters.news.borders.utils.GlideHelper;
 
 public class PaintingsAdapter extends ItemsAdapter<Painting> implements View.OnClickListener {
 
+    private Context context;
+    private List<NewsObject> newsItemList;
+
+//    public ListItemAdapter(Context context, List<NewsObject> list) {
+//        super(context,list);
+//        this.context = context;
+//        this.used_itemsList = list;
+//
+//    }
     public PaintingsAdapter(Context context) {
         super(context);
         setItemsList(Arrays.asList(Painting.getAllPaintings(context.getResources())));
@@ -50,11 +61,7 @@ public class PaintingsAdapter extends ItemsAdapter<Painting> implements View.OnC
         Painting item = (Painting) view.getTag(R.id.list_item_image);
         MainActivity mainActivity = (MainActivity) getContext();
 
-            System.out.println("hittttttttttttttttttttt!!!!!!!!!!!1");
             (mainActivity).openDetails(view, item);
-
-            System.out.println("notttttttttttttttt!!!!!!!!!!!1");
-
     }
 
     private static class ViewHolder {

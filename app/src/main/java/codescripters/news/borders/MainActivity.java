@@ -3,6 +3,7 @@ package codescripters.news.borders;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,22 +15,37 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alexvasilkov.android.commons.texts.SpannableBuilder;
 import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import codescripters.news.borders.Objects.NewsObject;
 import codescripters.news.borders.items.Painting;
 import codescripters.news.borders.items.PaintingsAdapter;
+import codescripters.news.borders.parsers.NewsJsonParser;
 import codescripters.news.borders.utils.GlideHelper;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    List<NewsObject> newsItemsArray = new ArrayList<NewsObject>();
     private View listTouchInterceptor;
     private View detailsLayout;
     private UnfoldableView unfoldableView;
+    MainActivity mainActivityContext;
+    List<MyTask> tasks;
+    OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +54,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        tasks = new ArrayList<>();
+        requestData("https://thenewsapp.herokuapp.com/api/news");
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ListView listView = Views.find(this, R.id.list_view);
-        listView.setAdapter(new PaintingsAdapter(this));
+        mainActivityContext = this;
 
         listTouchInterceptor = Views.find(this, R.id.touch_interceptor_view);
         listTouchInterceptor.setClickable(false);
@@ -88,6 +105,70 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void requestData(String uri) {
+        //Passing parameters for login authentication with username and password
+        System.out.println(uri);
+        MyTask task = new MyTask();
+        task.execute(uri);
+    }
+
+
+    private class MyTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            if (tasks.size() == 0)
+            {
+//                progress.show();
+            }
+            tasks.add(this);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            Request request = new Request.Builder()
+                    .url(params[0])
+                    .build();
+
+
+            Response response = null;
+            try {
+                response = client.newCall(request).execute();
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            tasks.remove(this);
+            if (tasks.size() == 0) {
+//                progress.dismiss();
+            }
+            if(result == null)
+            {
+                Toast.makeText(getApplicationContext(), "Can not connect to internet ",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                    System.out.println("Success");
+                    System.out.println(result);
+                    newsItemsArray =NewsJsonParser.parseFeed(result);
+
+                    System.out.println(newsItemsArray);
+                ListView listView = Views.find(mainActivityContext, R.id.list_view);
+                listView.setAdapter(new PaintingsAdapter(mainActivityContext));
+            }
+
+
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
         if (unfoldableView != null
@@ -113,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 .clearStyle()
                 .append(painting.getYear()).append("\n")
                 .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
-                .append("LOCATION   ").append(": ")
                 .clearStyle()
                 .append(painting.getLocation());
         description.setText(builder.build());
