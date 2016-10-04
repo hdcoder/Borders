@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView description = Views.find(detailsLayout, R.id.details_text);
 
 //        GlideHelper.loadPaintingImage(image, painting);
+        Picasso.with(this).load(newsObject.getMedia_src()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(image);
         title.setText(newsObject.getTitle_full());
         description.setText(newsObject.getBody_full());
 
