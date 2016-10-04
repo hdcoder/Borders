@@ -2,11 +2,8 @@ package codescripters.news.borders;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alexvasilkov.android.commons.texts.SpannableBuilder;
 import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
@@ -27,14 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codescripters.news.borders.Objects.NewsObject;
-import codescripters.news.borders.items.Painting;
 import codescripters.news.borders.items.PaintingsAdapter;
 import codescripters.news.borders.parsers.NewsJsonParser;
-import codescripters.news.borders.utils.GlideHelper;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -161,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
                     System.out.println(newsItemsArray);
                 ListView listView = Views.find(mainActivityContext, R.id.list_view);
-                listView.setAdapter(new PaintingsAdapter(mainActivityContext));
+                listView.setAdapter(new PaintingsAdapter(mainActivityContext,newsItemsArray));
             }
 
 
@@ -179,24 +171,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openDetails(View coverView, Painting painting) {
+    public void openDetails(View coverView, NewsObject newsObject) {
         final ImageView image = Views.find(detailsLayout, R.id.details_image);
         final TextView title = Views.find(detailsLayout, R.id.details_title);
         final TextView description = Views.find(detailsLayout, R.id.details_text);
 
-        GlideHelper.loadPaintingImage(image, painting);
-        title.setText(painting.getTitle());
+//        GlideHelper.loadPaintingImage(image, painting);
+        title.setText(newsObject.getTitle_full());
+        description.setText(newsObject.getBody_full());
 
-        SpannableBuilder builder = new SpannableBuilder(this);
-        builder
-                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
-                .append("YEAR").append(": ")
-                .clearStyle()
-                .append(painting.getYear()).append("\n")
-                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
-                .clearStyle()
-                .append(painting.getLocation());
-        description.setText(builder.build());
+//        SpannableBuilder builder = new SpannableBuilder(this);
+//        builder
+//                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
+//                .append("YEAR").append(": ")
+//                .clearStyle()
+//                .append(painting.getYear()).append("\n")
+//                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
+//                .clearStyle()
+//                .append(painting.getLocation());
+//        description.setText(builder.build());
 
         unfoldableView.unfold(coverView, detailsLayout);
     }
