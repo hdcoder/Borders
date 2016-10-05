@@ -38,6 +38,7 @@ public class NewsJsonParser {
 
                     newsObject.setMedia_type(mediaObj.getString("type"));
                     newsObject.setMedia_src(mediaObj.getString("src"));
+                    System.out.println(newsObject.getMedia_src());
                     newsObject.setPublishedOn(obj.getString("publishedOn"));
 
                     //log message to make sure the rides are coming from the server

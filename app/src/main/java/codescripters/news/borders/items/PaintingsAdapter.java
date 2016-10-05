@@ -50,8 +50,11 @@ public class PaintingsAdapter extends ItemsAdapter<NewsObject> implements View.O
         ViewHolder vh = (ViewHolder) convertView.getTag();
 
         vh.image.setTag(R.id.list_item_image, item);
-        Picasso.with(context).load(item.getMedia_src()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.image);
-        vh.title.setText(item.getTitle());
+        if(item.getMedia_src().isEmpty()) {
+            vh.image.setImageResource(R.mipmap.ic_launcher);
+        }else{
+            Picasso.with(context).load(item.getMedia_src()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.image);
+        }vh.title.setText(item.getTitle());
     }
 
     @Override

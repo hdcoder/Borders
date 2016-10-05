@@ -40,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private View listTouchInterceptor;
     private View detailsLayout;
     private UnfoldableView unfoldableView;
-    MainActivity mainActivityContext;
     List<MyTask> tasks;
     OkHttpClient client = new OkHttpClient();
+    ListView listView;
+    PaintingsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,21 @@ public class MainActivity extends AppCompatActivity {
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mainActivityContext = this;
+        listView = Views.find(this, R.id.list_view);
+        adapter = new PaintingsAdapter(this,newsItemsArray);
+        listView.setAdapter(adapter);
+        listView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+                System.out.println(totalItemsCount);
+                requestData("https://thenewsapp.herokuapp.com/api/news?page="+page);
+
+                // or customLoadMoreDataFromApi(totalItemsCount);
+                return true; // ONLY if more data is actually being loaded; false otherwise.
+            }
+        });
 
         listTouchInterceptor = Views.find(this, R.id.touch_interceptor_view);
         listTouchInterceptor.setClickable(false);
@@ -162,18 +177,16 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                    System.out.println("Success");
-                    System.out.println(result);
-                    newsItemsArray =NewsJsonParser.parseFeed(result);
+                System.out.println("Success");
+                System.out.println(result);
+                newsItemsArray.addAll(NewsJsonParser.parseFeed(result));
 
-                    System.out.println(newsItemsArray);
-                ListView listView = Views.find(mainActivityContext, R.id.list_view);
-                listView.setAdapter(new PaintingsAdapter(mainActivityContext,newsItemsArray));
+                System.out.println(newsItemsArray);
+
+                adapter.notifyDataSetChanged();
+
             }
-
-
         }
-
     }
 
     @Override
