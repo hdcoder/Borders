@@ -87,6 +87,7 @@
 
     <com.alexvasilkov.foldablelayout.UnfoldableView
         android:id="@+id/unfoldable_view"
+        android:paddingTop="@dimen/default_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

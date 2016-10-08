@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     OkHttpClient client = new OkHttpClient();
     ListView listView;
     PaintingsAdapter adapter;
-
+    Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,15 +63,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button button= (Button) findViewById(R.id.more_info);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, WebviewActivity.class);
-//                myIntent.putExtra("key", value); //Optional parameters
-                MainActivity.this.startActivity(myIntent);
-            }
-        });
+        button= (Button) findViewById(R.id.more_info);
+
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -199,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openDetails(View coverView, NewsObject newsObject) {
+    public void openDetails(View coverView, final NewsObject newsObject) {
         final ImageView image = Views.find(detailsLayout, R.id.details_image);
         final TextView title = Views.find(detailsLayout, R.id.details_title);
         final TextView description = Views.find(detailsLayout, R.id.details_text);
@@ -209,6 +202,19 @@ public class MainActivity extends AppCompatActivity {
         title.setText(newsObject.getTitle_full());
         description.setText(newsObject.getBody_full());
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, DetailNewsActivity.class);
+                myIntent.putExtra("news_title", newsObject.getTitle_full());
+                myIntent.putExtra("news_body", newsObject.getBody_full());
+                myIntent.putExtra("news_media_src", newsObject.getMedia_src());
+                myIntent.putExtra("news_published_on", newsObject.getPublishedOn());
+//                myIntent.putExtra("news_title", newsObject.getTitle_full());
+//                myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
 //        SpannableBuilder builder = new SpannableBuilder(this);
 //        builder
 //                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()

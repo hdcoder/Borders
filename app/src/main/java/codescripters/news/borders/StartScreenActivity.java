@@ -18,6 +18,7 @@ public class StartScreenActivity extends AppCompatActivity {
             public void run() {
                 final Intent mainIntent = new Intent(StartScreenActivity.this, MainActivity.class);
                 StartScreenActivity.this.startActivity(mainIntent);
+
                 StartScreenActivity.this.finish();
             }
         }, 1000);
