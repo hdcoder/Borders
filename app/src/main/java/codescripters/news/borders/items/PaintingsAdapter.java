@@ -18,7 +18,6 @@ import java.util.List;
 import codescripters.news.borders.MainActivity;
 import codescripters.news.borders.Objects.NewsObject;
 import codescripters.news.borders.R;
-import codescripters.news.borders.utils.GlideHelper;
 
 public class PaintingsAdapter extends ItemsAdapter<NewsObject> implements View.OnClickListener {
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 return true; // ONLY if more data is actually being loaded; false otherwise.
             }
         });
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
         listTouchInterceptor = Views.find(this, R.id.touch_interceptor_view);
         listTouchInterceptor.setClickable(false);
