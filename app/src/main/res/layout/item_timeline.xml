@@ -31,7 +31,7 @@
         app:endLine="#20000000"
         app:lineWidth="2dp"
         app:timeLineMarker="@drawable/almond_blossoms"
-        app:timeLineMarkerSize="24dp" />
+        app:timeLineMarkerSize="50dp" />
 
     <LinearLayout
         android:layout_width="0.0dip"

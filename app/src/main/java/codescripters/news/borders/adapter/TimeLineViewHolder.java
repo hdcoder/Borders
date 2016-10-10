@@ -28,7 +28,7 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
         time = (TextView) itemView.findViewById(R.id.timeLineTime);
         icon = (ImageView) itemView.findViewById(R.id.timeLineIcon);
         final TimeLineView timeLineView = (TimeLineView) itemView.findViewById(R.id.timeLineView);
-        Drawable drawable = context.getResources().getDrawable(R.drawable.starry_night);
+        Drawable drawable = context.getResources().getDrawable(R.drawable.newspaper);
         Drawable drawable2 = context.getResources().getDrawable(R.drawable.timeline_marker2);
         Drawable drawable3 = context.getResources().getDrawable(R.drawable.timeline_marker3);
         Drawable drawable4 = context.getResources().getDrawable(R.drawable.cafe_terrace);
@@ -36,7 +36,8 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
         Drawable drawable6 = context.getResources().getDrawable(R.drawable.timeline_marker6);
         Drawable drawable7 = context.getResources().getDrawable(R.drawable.timeline_marker7);
         Random random = new Random();
-        final int i = random.nextInt(7);
+//        final int i = random.nextInt(7);
+        final int i =0;
         final Drawable drawables[] = {drawable,drawable2,drawable3,drawable4,drawable5,drawable6,drawable7};
         timeLineView.setTimeLineMarker(drawables[i]);
         if (type == TimeLineItemType.ATOM) {
