@@ -28,10 +28,10 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
         time = (TextView) itemView.findViewById(R.id.timeLineTime);
         icon = (ImageView) itemView.findViewById(R.id.timeLineIcon);
         final TimeLineView timeLineView = (TimeLineView) itemView.findViewById(R.id.timeLineView);
-        Drawable drawable = context.getResources().getDrawable(R.drawable.timeline_marker);
+        Drawable drawable = context.getResources().getDrawable(R.drawable.starry_night);
         Drawable drawable2 = context.getResources().getDrawable(R.drawable.timeline_marker2);
         Drawable drawable3 = context.getResources().getDrawable(R.drawable.timeline_marker3);
-        Drawable drawable4 = context.getResources().getDrawable(R.drawable.timeline_marker4);
+        Drawable drawable4 = context.getResources().getDrawable(R.drawable.cafe_terrace);
         Drawable drawable5 = context.getResources().getDrawable(R.drawable.timeline_marker5);
         Drawable drawable6 = context.getResources().getDrawable(R.drawable.timeline_marker6);
         Drawable drawable7 = context.getResources().getDrawable(R.drawable.timeline_marker7);

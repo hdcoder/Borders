@@ -3,22 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:background="@color/grey_200"
+    android:orientation="horizontal">
 
     <TextView
         android:text="timeLineTime"
         android:id="@+id/timeLineTime"
         android:layout_width="40dp"
+        android:background="@drawable/card"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
         android:gravity="center"
         android:textColor="@android:color/background_dark"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <codescripters.news.borders.view.TimeLineView
         android:id="@+id/timeLineView"
@@ -40,9 +36,9 @@
     <LinearLayout
         android:layout_width="0.0dip"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:layout_weight="1.0"
         android:gravity="center_vertical"
+        android:background="@drawable/card"
         android:orientation="vertical"
         android:paddingBottom="12dp"
         android:paddingTop="12dp">
@@ -61,7 +57,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:text="name"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/blue_grey_800"
             android:textSize="16sp" />
 
         <TextView
@@ -69,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="date"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
     </LinearLayout>
 
