@@ -35,7 +35,7 @@ public class TimeLineView extends View {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimeLineView);
         lineWidth = typedArray.getDimensionPixelSize(R.styleable.TimeLineView_lineWidth, 15);
-        timeLineMarkerSize = typedArray.getDimensionPixelSize(R.styleable.TimeLineView_timeLineMarkerSize, 50);
+        timeLineMarkerSize = typedArray.getDimensionPixelSize(R.styleable.TimeLineView_timeLineMarkerSize, 35);
         beginLine = typedArray.getDrawable(R.styleable.TimeLineView_beginLine);
         endLine = typedArray.getDrawable(R.styleable.TimeLineView_endLine);
         timeLineMarker = typedArray.getDrawable(R.styleable.TimeLineView_timeLineMarker);

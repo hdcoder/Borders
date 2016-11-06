@@ -56,16 +56,16 @@ public class DetailNewsActivity extends AppCompatActivity {
         timeLineItems.add(new TimeLineItem("26 May 2016",
                 getResources().getDrawable(R.drawable.starry_night),
                 newsBody,
-                "Hello world"));
+                "8:41 PM"));
 
         timeLineItems.add(new TimeLineItem("26 May 2016",
                 getResources().getDrawable(R.drawable.starry_night),
                 newsBody,
-                "Hello world"));
+                "27 Aug"));
         timeLineItems.add(new TimeLineItem("26 May 2016",
                 getResources().getDrawable(R.drawable.starry_night),
                 "Hello World  ",
-                "Hello world"));
+                "28"));
         timeLineItems.add(new TimeLineItem("26 May 2016",
                 getResources().getDrawable(R.drawable.starry_night),
                 "Hello World  ",
