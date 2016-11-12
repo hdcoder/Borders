@@ -16,8 +16,12 @@ public class NewsJsonParser {
 	public static List<NewsObject> parseFeed(String content) {
 
         List<NewsObject> newsItemList = new ArrayList<>();
+        System.out.println("jhkgdfddsf");
 
-            try{
+        System.out.println(content);
+        System.out.println("jhgdkfjsahdf");
+
+        try{
                 JSONArray newsJsonArray = new JSONArray(content);
 
                 NewsObject newsObject;

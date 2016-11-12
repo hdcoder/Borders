@@ -1,5 +1,6 @@
 package codescripters.news.borders;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.okhttp.Call;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -31,6 +33,7 @@ import java.util.List;
 import codescripters.news.borders.Objects.NewsObject;
 import codescripters.news.borders.items.PaintingsAdapter;
 import codescripters.news.borders.parsers.NewsJsonParser;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private View listTouchInterceptor;
     private View detailsLayout;
     private UnfoldableView unfoldableView;
-    List<MyTask> tasks;
     OkHttpClient client = new OkHttpClient();
+    private ProgressDialog progress;
     ListView listView;
     PaintingsAdapter adapter;
     Button button;
@@ -53,8 +56,31 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        tasks = new ArrayList<>();
-        requestData("https://thenewsapp.herokuapp.com/api/news");
+        progress = new ProgressDialog(this);
+
+        progress.setTitle("Loading News !!!"); //title
+
+        progress.setMessage("Contacting LOC !"); // message
+
+        progress.setCancelable(true);
+
+        progress.show();
+//        requestData("https://thenewsapp.herokuapp.com/api/news");
+        Request request = new Request.Builder()
+                .url("https://thenewsapp.herokuapp.com/api/news")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+               String responseBody = response.body().string();
+               processResult(responseBody);
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
                 System.out.println(totalItemsCount);
-                requestData("https://thenewsapp.herokuapp.com/api/news?page="+page);
+//                requestData("https://thenewsapp.herokuapp.com/api/news?page="+page);
 
                 // or customLoadMoreDataFromApi(totalItemsCount);
                 return true; // ONLY if more data is actually being loaded; false otherwise.
@@ -125,63 +151,22 @@ public class MainActivity extends AppCompatActivity {
     private void requestData(String uri) {
         //Passing parameters for login authentication with username and password
         System.out.println(uri);
-        MyTask task = new MyTask();
-        task.execute(uri);
     }
 
+    public void processResult(String result) {
+        System.out.println("Success");
+        System.out.println(result);
+        newsItemsArray.addAll(NewsJsonParser.parseFeed(result));
+        System.out.println(newsItemsArray);
+        runOnUiThread(new Runnable() {
 
-    private class MyTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (tasks.size() == 0)
-            {
-//                progress.show();
-            }
-            tasks.add(this);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            Request request = new Request.Builder()
-                    .url(params[0])
-                    .build();
-
-
-            Response response = null;
-            try {
-                response = client.newCall(request).execute();
-                return response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            tasks.remove(this);
-            if (tasks.size() == 0) {
-//                progress.dismiss();
-            }
-            if(result == null)
-            {
-                Toast.makeText(getApplicationContext(), "Can not connect to internet ",
-                        Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                System.out.println("Success");
-                System.out.println(result);
-                newsItemsArray.addAll(NewsJsonParser.parseFeed(result));
-
-                System.out.println(newsItemsArray);
-
+            @Override
+            public void run() {
+                progress.dismiss();
                 adapter.notifyDataSetChanged();
-
             }
-        }
+
+        });
     }
 
     @Override
@@ -203,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(this).load(newsObject.getMedia_src()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(image);
         title.setText(newsObject.getTitle_full());
         description.setText(newsObject.getBody_full());
+//        requestData("https://thenewsapp.herokuapp.com/api/news/"+newsObject.getId());
+        System.out.println("https://thenewsapp.herokuapp.com/api/news/"+newsObject.getId());
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
