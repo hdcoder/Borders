@@ -26,6 +26,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.okhttp.Call;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progress;
     ListView listView;
     PaintingsAdapter adapter;
-    Button button;
+    Button moreInfoBtn,timeLineBtn;
+    JSONObject detailResponse = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         progress.setTitle("Loading News !!!"); //title
 
         progress.setMessage("Contacting LOC !"); // message
-
+        progress.setCancelable(false);
         progress.setCancelable(true);
 
         progress.show();
@@ -90,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button= (Button) findViewById(R.id.more_info);
-
+        moreInfoBtn= (Button) findViewById(R.id.more_info);
+        timeLineBtn= (Button) findViewById(R.id.timelineBtn);
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -104,6 +109,21 @@ public class MainActivity extends AppCompatActivity {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
                 System.out.println(totalItemsCount);
+                Request pageRequest = new Request.Builder()
+                        .url("https://thenewsapp.herokuapp.com/api/news?page="+page)
+                        .build();
+                client.newCall(pageRequest).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, IOException e) {
+                    }
+
+                    @Override
+                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                        String responseBody = response.body().string();
+                        processResult(responseBody);
+                    }
+                });
+//
 //                requestData("https://thenewsapp.herokuapp.com/api/news?page="+page);
 
                 // or customLoadMoreDataFromApi(totalItemsCount);
@@ -189,9 +209,46 @@ public class MainActivity extends AppCompatActivity {
         title.setText(newsObject.getTitle_full());
         description.setText(newsObject.getBody_full());
 //        requestData("https://thenewsapp.herokuapp.com/api/news/"+newsObject.getId());
-        System.out.println("https://thenewsapp.herokuapp.com/api/news/"+newsObject.getId());
+        Request pageRequest = new Request.Builder()
+                .url("https://thenewsapp.herokuapp.com/api/news/"+newsObject.getId())
+                .build();
+        client.newCall(pageRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
 
-        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                try {
+                    detailResponse = new JSONObject(response.body().string());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(detailResponse);
+                final JSONObject finalDetailResponse = detailResponse;
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            if(finalDetailResponse != null && finalDetailResponse.getJSONArray("timeline").length()>1){
+                                timeLineBtn.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                timeLineBtn.setVisibility(View.GONE);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+
+//                processResult(responseBody);
+            }
+        });
+
+        timeLineBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, DetailNewsActivity.class);
@@ -199,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 myIntent.putExtra("news_body", newsObject.getBody_full());
                 myIntent.putExtra("news_media_src", newsObject.getMedia_src());
                 myIntent.putExtra("news_published_on", newsObject.getPublishedOn());
-//                myIntent.putExtra("news_title", newsObject.getTitle_full());
+                myIntent.putExtra("newsDetail", detailResponse.toString());
 //                myIntent.putExtra("key", value); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
             }

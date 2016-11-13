@@ -21,7 +21,6 @@
         android:id="@+id/touch_interceptor_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <LinearLayout
         android:id="@+id/details_layout"
         android:layout_width="match_parent"
@@ -70,8 +69,25 @@
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="4sp"
             android:textColor="#eee"
-            android:maxLines="8"
+            android:maxLines="6"
             android:textSize="14sp" />
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#333"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/timelineBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="TimeLine"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:visibility="visible"
+            />
 
         <Button
             android:id="@+id/more_info"
@@ -82,7 +98,9 @@
             android:layout_marginRight="@dimen/default_margin"
             android:lineSpacingExtra="4sp"
             android:text="MORE INFO"
+            android:layout_weight="0.5"
             android:textSize="14sp" />
+            </LinearLayout>
 
     </LinearLayout>
 

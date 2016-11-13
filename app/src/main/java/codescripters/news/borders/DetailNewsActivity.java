@@ -4,12 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alexvasilkov.android.commons.utils.Views;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,22 +27,25 @@ public class DetailNewsActivity extends AppCompatActivity {
     ImageView newsImageView;
     TextView newsTextView;
     String newsBody;
+    JSONObject newsJsonObject = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailnews);
 
-            newsBody = this.getIntent().getStringExtra("news_body");
-            String newsTitle  = this.getIntent().getStringExtra("news_title");
-            String newsMediaSrc  = this.getIntent().getStringExtra("news_media_src");
-            String newsPublishedOn  = this.getIntent().getStringExtra("news_published_on");
-
-            newsImageView = (ImageView) findViewById(R.id.NewsImage);
+        newsBody = this.getIntent().getStringExtra("news_body");
+        String newsMediaSrc = this.getIntent().getStringExtra("news_media_src");
+        try {
+            newsJsonObject = new JSONObject(this.getIntent().getStringExtra("newsDetail"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        newsImageView = (ImageView) findViewById(R.id.NewsImage);
 //            newsTextView = (TextView) findViewById(R.id.NewsBody);
 //        GlideHelper.loadPaintingImage(image, painting);
         Picasso.with(this).load(newsMediaSrc).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(newsImageView);
 //        newsTextView.setText(newsBody);
-            System.out.println(newsBody);
 
         RecyclerView timeLineRecyclerView = (RecyclerView) findViewById(R.id.timeLineRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -53,38 +58,25 @@ public class DetailNewsActivity extends AppCompatActivity {
 
     private List<TimeLineItem> initDatas() {
         List<TimeLineItem> timeLineItems = new ArrayList<>();
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                newsBody,
-                "8:41 PM"));
 
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                newsBody,
-                "27 Aug"));
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                "Hello World  ",
-                "28"));
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                "Hello World  ",
-                "Hello world"));
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                "Hello World  ",
-                "Hello world"));
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                "Hello World  ",
-                "Hello world"));
+        try {
+            JSONArray newsJsonArray = newsJsonObject.getJSONArray("timeline");
 
-        timeLineItems.add(new TimeLineItem("26 May 2016",
-                getResources().getDrawable(R.drawable.starry_night),
-                "Hello World  ",
-                "Hello world"));
+            for (int i = 0; i < newsJsonArray.length(); i++) {
+                JSONObject obj = newsJsonArray.optJSONObject(i);
 
+                String time = DateUtils.formatDateTime(this, obj.getLong("date"), DateUtils.FORMAT_SHOW_TIME);
 
+                timeLineItems.add(new TimeLineItem(obj.getString("publishedOn"),
+                        getResources().getDrawable(R.drawable.starry_night),
+                        obj.getString("text"),
+                        time));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return timeLineItems;
     }
