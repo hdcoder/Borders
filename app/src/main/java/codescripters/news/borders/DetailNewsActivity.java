@@ -8,7 +8,6 @@ import android.text.format.DateUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alexvasilkov.android.commons.utils.Views;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import codescripters.news.borders.Objects.NewsObject;
 import codescripters.news.borders.adapter.TimeLineAdapter;
 import codescripters.news.borders.bean.TimeLineItem;
 

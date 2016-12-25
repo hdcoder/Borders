@@ -6,38 +6,35 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/itmatters_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="codescripters.news.borders.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".StartScreenActivity">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="codescripters.news.borders.StartScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailNewsActivity"></activity>
-        <!--
-            Defining Services
-        -->
-        <service
-            android:name=".utils.MyFirebaseMessagingService">
+        <activity android:name="codescripters.news.borders.DetailNewsActivity" />
+        <!--             Defining Services -->
+        <service android:name="codescripters.news.borders.utils.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="codescripters.news.borders.utils.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name=".utils.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+        <activity android:name="codescripters.news.borders.WebviewActivity"></activity>
     </application>
 
 </manifest>

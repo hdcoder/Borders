@@ -21,6 +21,6 @@ public class StartScreenActivity extends AppCompatActivity {
 
                 StartScreenActivity.this.finish();
             }
-        }, 1000);
+        }, 2000);
     }
 }
